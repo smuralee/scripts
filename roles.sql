@@ -12,51 +12,10 @@
 --    See the License for the specific language governing permissions and
 --    limitations under the License.
 
--- Role: "app-users-group"
--- DROP ROLE IF EXISTS "app-users-group";
+-- Role: admin_operator_group
+-- DROP ROLE IF EXISTS admin_operator_group;
 
-CREATE ROLE "app-users-group" WITH
-  NOLOGIN
-  NOSUPERUSER
-  INHERIT
-  NOCREATEDB
-  NOCREATEROLE
-  NOREPLICATION;
-
-COMMENT ON ROLE "app-users-group" IS 'Application users group';
-
--- Role: "human-users-group"
--- DROP ROLE IF EXISTS "human-users-group";
-
-CREATE ROLE "human-users-group" WITH
-  NOLOGIN
-  NOSUPERUSER
-  INHERIT
-  NOCREATEDB
-  NOCREATEROLE
-  NOREPLICATION;
-
-COMMENT ON ROLE "human-users-group" IS 'Human users group';
-
--- Role: sandbox
--- DROP ROLE IF EXISTS sandbox;
-
-CREATE ROLE sandbox WITH
-  LOGIN
-  NOSUPERUSER
-  INHERIT
-  NOCREATEDB
-  NOCREATEROLE
-  NOREPLICATION;
-
-GRANT "human-users-group" TO sandbox;
-
-COMMENT ON ROLE sandbox IS 'Human user via SQL client'
-
--- Role: "admin-users-group"
--- DROP ROLE IF EXISTS "admin-users-group";
-
-CREATE ROLE "admin-users-group" WITH
+CREATE ROLE admin_operator_group WITH
   NOLOGIN
   NOSUPERUSER
   INHERIT
@@ -64,12 +23,25 @@ CREATE ROLE "admin-users-group" WITH
   CREATEROLE
   NOREPLICATION;
 
-COMMENT ON ROLE "admin-users-group" IS 'Admin users group for operators';
+COMMENT ON ROLE admin_operator_group IS 'Admin operators via SQL client';
 
--- Role: "app-demo-admin"
--- DROP ROLE IF EXISTS "app-demo-admin";
+-- Role: operator_group
+-- DROP ROLE IF EXISTS operator_group;
 
-CREATE ROLE "app-demo-admin" WITH
+CREATE ROLE operator_group WITH
+  NOLOGIN
+  NOSUPERUSER
+  INHERIT
+  NOCREATEDB
+  NOCREATEROLE
+  NOREPLICATION;
+
+COMMENT ON ROLE operator_group IS 'Human operators group';
+
+-- Role: operator_admin
+-- DROP ROLE IF EXISTS operator_admin;
+
+CREATE ROLE operator_admin WITH
   LOGIN
   NOSUPERUSER
   INHERIT
@@ -77,6 +49,40 @@ CREATE ROLE "app-demo-admin" WITH
   CREATEROLE
   NOREPLICATION;
 
-GRANT "admin-users-group" TO "app-demo-admin" WITH ADMIN OPTION;
+GRANT admin_operator_group TO operator_admin WITH ADMIN OPTION;
 
-COMMENT ON ROLE "app-demo-admin" IS 'Demo application adminstrator';;
+COMMENT ON ROLE operator_admin IS 'Operator adminstrator';
+
+-- Role: operator
+-- DROP ROLE IF EXISTS operator;
+
+CREATE ROLE operator WITH
+  LOGIN
+  NOSUPERUSER
+  INHERIT
+  NOCREATEDB
+  NOCREATEROLE
+  NOREPLICATION;
+
+GRANT operator_group TO operator;
+
+COMMENT ON ROLE operator IS 'Human operator via SQL client';
+
+-- Role: app_user
+-- DROP ROLE IF EXISTS app_user;
+
+CREATE ROLE app_user WITH
+  LOGIN
+  NOSUPERUSER
+  INHERIT
+  NOCREATEDB
+  NOCREATEROLE
+  NOREPLICATION;
+
+GRANT rds_iam TO app_user;
+
+COMMENT ON ROLE app_user IS 'Application user with AWS IAM authentication';
+
+-- Alter the password for the user
+
+ALTER USER operator_admin PASSWORD '<YOUR PASSWORD>';

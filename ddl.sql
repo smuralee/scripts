@@ -12,13 +12,13 @@
 --    See the License for the specific language governing permissions and
 --    limitations under the License.
 
--- Database: app-demo
+-- Database: capital_markets_db
 
--- DROP DATABASE IF EXISTS "app-demo";
+-- DROP DATABASE IF EXISTS capital_markets_db;
 
-CREATE DATABASE "app-demo"
+CREATE DATABASE capital_markets_db
     WITH
-    OWNER = "app-demo-admin"
+    OWNER = operator_admin
     ENCODING = 'UTF8'
     LC_COLLATE = 'en_US.UTF-8'
     LC_CTYPE = 'en_US.UTF-8'
@@ -26,5 +26,5 @@ CREATE DATABASE "app-demo"
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
 
-COMMENT ON DATABASE "app-demo"
-    IS 'Demo application database';
+COMMENT ON DATABASE capital_markets_db
+    IS 'Capital markets database';
